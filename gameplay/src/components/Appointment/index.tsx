@@ -1,19 +1,22 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
+
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
 import { categories } from '../../utils/categories';
-import { styles } from './styles';
+
+import { theme } from '../../global/styles/theme';
 
 import { GuildIcon } from '../GuildIcon';
-import PlayerSvg from '../../assets/player.svg';
+
 import CalendarSvg from '../../assets/calendar.svg';
-import { theme } from '../../global/styles/theme';
+import PlayerSvg from '../../assets/player.svg';
+
+import { styles } from './styles';
 
 type Guild = {
   id: string;
   name: string;
-  icon: string;
+  icon: null;
   owner: boolean;
 };
 
@@ -30,7 +33,7 @@ type Props = RectButtonProps & {
 };
 
 export function Appointment({ data, ...rest }: Props) {
-  const [category] = categories.filter((item) => (item.id = data.category));
+  const [category] = categories.filter((item) => item.id === data.category);
   const { owner } = data.guild;
   const { primary, on } = theme.colors;
   return (
