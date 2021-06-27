@@ -24,6 +24,30 @@ export function Guilds({ handleGuildSelect }: Props) {
       icon: null,
       owner: false,
     },
+    {
+      id: '3',
+      name: 'Tropicália',
+      icon: null,
+      owner: false,
+    },
+    {
+      id: '4',
+      name: 'Tropicália',
+      icon: null,
+      owner: false,
+    },
+    {
+      id: '5',
+      name: 'Tropicália',
+      icon: null,
+      owner: false,
+    },
+    {
+      id: '6',
+      name: 'Tropicália',
+      icon: null,
+      owner: false,
+    },
   ];
 
   return (
@@ -34,8 +58,10 @@ export function Guilds({ handleGuildSelect }: Props) {
         renderItem={({ item }) => (
           <Guild data={item} onPress={() => handleGuildSelect(item)} />
         )}
-        ItemSeparatorComponent={() => <ListDivider />}
+        ItemSeparatorComponent={() => <ListDivider isCentered />}
         style={styles.guilds}
+        contentContainerStyle={{ paddingBottom: 68, paddingTop: 103 }}
+        ListHeaderComponent={() => <ListDivider isCentered />}
       />
     </View>
   );
