@@ -35,10 +35,23 @@ import { ModalView } from '../../components/ModalView';
 import { Guilds } from '../Guilds';
 import { GuildProps } from '../../components/Guild';
 
+import uuid from 'react-native-uuid';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { COLLECTION_APPOINTMENTS } from '../../configs/database';
+import { useNavigation } from '@react-navigation/native';
+
 export function AppointmentCreate() {
   const [category, setCategory] = useState('');
   const [openGuildsModal, setOpenGuildsModal] = useState(false);
   const [guild, setGuild] = useState<GuildProps>();
+
+  const [day, setDay] = useState('');
+  const [month, setMonth] = useState('');
+  const [hour, setHour] = useState('');
+  const [minute, setMinute] = useState('');
+  const [description, setDescription] = useState('');
+
+  const navigation = useNavigation();
 
   function handleOpenGuilds() {
     setOpenGuildsModal(true);
@@ -55,6 +68,25 @@ export function AppointmentCreate() {
 
   function handleCategorySelect(categoryId: string) {
     setCategory(categoryId);
+  }
+
+  async function handleSave() {
+    const newAppoitment = {
+      id: uuid.v4(),
+      guild,
+      category,
+      date: `${day}/${month} às ${hour}:${minute}h`,
+      description,
+    };
+
+    const storage = await AsyncStorage.getItem(COLLECTION_APPOINTMENTS);
+    const appoitments = storage ? JSON.parse(storage) : [];
+    await AsyncStorage.setItem(
+      COLLECTION_APPOINTMENTS,
+      JSON.stringify([...appoitments, newAppoitment])
+    );
+
+    navigation.navigate('Home');
   }
 
   return (
@@ -85,7 +117,11 @@ export function AppointmentCreate() {
             <View style={styles.form}>
               <RectButton onPress={handleOpenGuilds}>
                 <View style={styles.select}>
-                  {guild?.icon ? <GuildIcon /> : <View style={styles.image} />}
+                  {guild?.id ? (
+                    <GuildIcon guildId={guild.id} iconId={guild.icon} />
+                  ) : (
+                    <View style={styles.image} />
+                  )}
                   <View style={styles.selectBody}>
                     <Text style={styles.label}>
                       {guild ? guild.name : 'Selecione um servidor'}
@@ -107,9 +143,17 @@ export function AppointmentCreate() {
                   </Text>
 
                   <View style={styles.column}>
-                    <SmallInput maxLength={2} />
+                    <SmallInput
+                      maxLength={2}
+                      onChangeText={setDay}
+                      value={day}
+                    />
                     <Text style={styles.divider}>/</Text>
-                    <SmallInput maxLength={2} />
+                    <SmallInput
+                      maxLength={2}
+                      onChangeText={setMonth}
+                      value={month}
+                    />
                   </View>
                 </View>
 
@@ -119,9 +163,17 @@ export function AppointmentCreate() {
                   </Text>
 
                   <View style={styles.column}>
-                    <SmallInput maxLength={2} />
+                    <SmallInput
+                      maxLength={2}
+                      onChangeText={setHour}
+                      value={hour}
+                    />
                     <Text style={styles.divider}>:</Text>
-                    <SmallInput maxLength={2} />
+                    <SmallInput
+                      maxLength={2}
+                      onChangeText={setMinute}
+                      value={minute}
+                    />
                   </View>
                 </View>
               </View>
@@ -134,10 +186,12 @@ export function AppointmentCreate() {
                 maxLength={100}
                 numberOfLines={5}
                 autoCorrect={false}
+                onChangeText={setDescription}
+                value={description}
               />
 
               <View style={styles.footer}>
-                <Button title="Agendar" />
+                <Button title="Agendar" onPress={handleSave} />
               </View>
             </View>
           </Background>

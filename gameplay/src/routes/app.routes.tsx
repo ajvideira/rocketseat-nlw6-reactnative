@@ -11,7 +11,7 @@ import { theme } from '../global/styles/theme';
 
 const { Navigator, Screen } = createStackNavigator();
 
-export function AuthRoutes() {
+export function AppRoutes() {
   return (
     <Navigator
       headerMode="none"
@@ -19,7 +19,6 @@ export function AuthRoutes() {
         cardStyle: { backgroundColor: theme.colors.secondary100 },
       }}
     >
-      <Screen name="SigIn" component={SignIn} />
       <Screen name="Home" component={Home} />
       <Screen name="AppointmentDetails" component={AppointmentDetails} />
       <Screen name="AppointmentCreate" component={AppointmentCreate} />
